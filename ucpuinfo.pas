@@ -5,7 +5,7 @@ unit ucpuinfo;
 interface
 
 uses
-  Classes, SysUtils, Process;
+  Classes, SysUtils, Process, DateUtils;
 
 type
   TCPUInfo = class
@@ -46,6 +46,8 @@ begin
     FCPUFrequency := 0;
   end;
   ProcessOutput.Free;
+  WriteLn(Format('[CPU] %s - Freq: %f',
+      [FormatDateTime('hh:nn:ss.zzz', Now), FCPUFrequency]));
   Result := FCPUFrequency;
 end;
 
@@ -76,8 +78,12 @@ begin
       DiffTotal := Total - FPrevTotalTime;
       
       if DiffTotal > 0 then
+      begin
         FCPUUsage := 100.0 * (1.0 - DiffIdle / DiffTotal);
-        
+        WriteLn(Format('[CPU] %s - Usage: %.2f%%', 
+               [FormatDateTime('hh:nn:ss.zzz', Now), FCPUUsage]));
+      end;
+      
       FPrevIdleTime := Idle;
       FPrevTotalTime := Total;
       Result := FCPUUsage;

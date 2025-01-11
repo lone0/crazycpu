@@ -10,8 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, mainwin
-  { you can add units after this };
+  Forms, tachartlazaruspkg, mainwin, ucpuinfo;
 
 {$R *.res}
 

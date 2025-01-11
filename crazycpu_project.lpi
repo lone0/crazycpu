@@ -14,7 +14,7 @@
       <Icon Value="0"/>
     </General>
     <MacroValues Count="1">
-      <Macro1 Name="LCLWidgetType" Value="qt5"/>
+      <Macro1 Name="LCLWidgetType" Value="qt6"/>
     </MacroValues>
     <BuildModes>
       <Item Name="Default" Default="True"/>
@@ -27,6 +27,9 @@
       <FormatVersion Value="2"/>
     </RunParams>
     <RequiredPackages>
+      <Item>
+        <PackageName Value="TAChartLazarusPkg"/>
+      </Item>
       <Item>
         <PackageName Value="LCL"/>
       </Item>
@@ -42,6 +45,10 @@
         <ComponentName Value="MainWindow"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
+        <Filename Value="ucpuinfo.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit>
     </Units>
   </ProjectOptions>
