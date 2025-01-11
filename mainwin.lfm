@@ -1,20 +1,46 @@
 object MainWindow: TMainWindow
   Left = 595
-  Height = 240
+  Height = 400
   Top = 125
-  Width = 320
-  Caption = 'MainWindow'
-  ClientHeight = 240
-  ClientWidth = 320
+  Width = 600
+  Caption = 'CPU Monitor'
+  ClientHeight = 400
+  ClientWidth = 600
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   DesignTimePPI = 106
   LCLVersion = '2.2.0.4'
-  object SampleBtn: TButton
-    Left = 144
-    Height = 28
-    Top = 160
-    Width = 83
-    Caption = 'SampleBtn'
-    OnClick = SampleBtnClick
-    TabOrder = 0
+  object Chart: TChart
+    Left = 8
+    Height = 384
+    Top = 8
+    Width = 584
+    AxisList = <    
+      item
+        Alignment = calLeft
+        Title.Caption = 'CPU Frequency (MHz)'
+        Marks.Format = '%0:.0f'
+      end    
+      item
+        Alignment = calBottom
+        Title.Caption = 'Time'
+        Marks.Format = '%0:.0f'
+      end
+      item
+        Alignment = calRight
+        Title.Caption = 'CPU Usage (%)'
+        Marks.Format = '%0:.0f'
+      end>
+    object FreqSeries: TLineSeries
+      AxisIndexY = 0
+    end
+    object UsageSeries: TBarSeries
+      AxisIndexY = 2
+    end
+  end
+  object UpdateTimer: TTimer
+    OnTimer = UpdateTimerTimer
+    Left = 16
+    Top = 16
   end
 end
