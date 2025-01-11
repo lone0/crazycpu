@@ -1,0 +1,20 @@
+object MainWindow: TMainWindow
+  Left = 595
+  Height = 240
+  Top = 125
+  Width = 320
+  Caption = 'MainWindow'
+  ClientHeight = 240
+  ClientWidth = 320
+  DesignTimePPI = 106
+  LCLVersion = '2.2.0.4'
+  object SampleBtn: TButton
+    Left = 144
+    Height = 28
+    Top = 160
+    Width = 83
+    Caption = 'SampleBtn'
+    OnClick = SampleBtnClick
+    TabOrder = 0
+  end
+end
