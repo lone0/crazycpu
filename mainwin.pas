@@ -6,14 +6,19 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  TAGraph, TASeries, ucpuinfo;
+  TAGraph, TASeries, TATransformations, ucpuinfo;
 
 type
   { TMainWindow }
 
   TMainWindow = class(TForm)
     Chart: TChart;
+    RightAxisTransformations: TChartAxisTransformations;
+    LeftAxisTransformations: TChartAxisTransformations;
+
     FreqSeries: TLineSeries;
+    LeftAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform;
+    RightAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform;
     UsageSeries: TBarSeries;
     UpdateTimer: TTimer;
     procedure FormCreate(Sender: TObject);
@@ -42,17 +47,17 @@ begin
   FCPUInfo := TCPUInfo.Create;
   FTimePoint := 0;
   
+  // Configure series
+  FreqSeries.AxisIndexY := 0;  // Left axis
+  UsageSeries.AxisIndexY := 2; // Right axis
+  
   FreqSeries.SeriesColor := clBlue;
   UsageSeries.SeriesColor := clRed;
   
-  // Configure initial axis ranges
-  Chart.AxisList[0].Range.Min := 1000;    // Frequency axis
-  Chart.AxisList[0].Range.Max := 5000; // Assume max 5GHz
+  // Configure axis ranges
   Chart.AxisList[1].Range.Min := 0;    // Time axis
   Chart.AxisList[1].Range.Max := MinsToShow;
-  Chart.AxisList[2].Range.Min := 0;    // Usage axis
-  Chart.AxisList[2].Range.Max := 100;  // Percentage
-  
+
   UpdateTimer.Interval := 1000;
   UpdateTimer.Enabled := True;
 end;
@@ -76,8 +81,7 @@ begin
     UsageSeries.Delete(0);
     Chart.AxisList[1].Range.Min := FTimePoint - MinsToShow;
     Chart.AxisList[1].Range.Max := FTimePoint;
-    Chart.AxisList[2].Range.Min := 0;    // Usage axis
-    Chart.AxisList[2].Range.Max := 100;  // Percentage
+
   end;
 end;
 

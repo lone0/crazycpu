@@ -1,5 +1,5 @@
 object MainWindow: TMainWindow
-  Left = 595
+  Left = 593
   Height = 594
   Top = 125
   Width = 830
@@ -21,8 +21,15 @@ object MainWindow: TMainWindow
         Marks.LabelBrush.Style = bsClear
         Marks.Style = smsCustom
         Minors = <>
+        Range.Max = 3600
+        Range.Min = 1200
+        Range.UseMax = True
+        Range.UseMin = True
+        Title.LabelFont.Orientation = 900
+        Title.Visible = True
         Title.Caption = 'CPU Frequency (MHz)'
         Title.LabelBrush.Style = bsClear
+        Transformations = LeftAxisTransformations
       end    
       item
         Alignment = calBottom
@@ -39,9 +46,14 @@ object MainWindow: TMainWindow
         Marks.LabelBrush.Style = bsClear
         Marks.Style = smsCustom
         Minors = <>
+        Range.Max = 100
+        Range.UseMax = True
+        Range.UseMin = True
+        Title.LabelFont.Orientation = 900
         Title.Visible = True
         Title.Caption = 'CPU Usage (%)'
         Title.LabelBrush.Style = bsClear
+        Transformations = RightAxisTransformations
       end>
     Title.Text.Strings = (
       'TAChart'
@@ -58,5 +70,17 @@ object MainWindow: TMainWindow
     OnTimer = UpdateTimerTimer
     Left = 40
     Top = 32
+  end
+  object LeftAxisTransformations: TChartAxisTransformations
+    Left = 40
+    Top = 80
+    object LeftAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform
+    end
+  end
+  object RightAxisTransformations: TChartAxisTransformations
+    Left = 40
+    Top = 128
+    object RightAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform
+    end
   end
 end
