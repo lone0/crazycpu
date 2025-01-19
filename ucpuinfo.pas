@@ -10,23 +10,41 @@ uses
 type
   TCPUInfo = class
   private
+    FCoreID: Integer;
     FPrevIdleTime: Int64;
     FPrevTotalTime: Int64;
     FCPUFrequency: Double;
     FCPUUsage: Double;
   public
-    constructor Create;
+    constructor Create(ACoreID: Integer);
     function GetCPUFrequency: Double;
     function GetCPUUsage: Double;
+    property CoreID: Integer read FCoreID;
     property CPUFrequency: Double read FCPUFrequency;
     property CPUUsage: Double read FCPUUsage;
   end;
 
+  TCPUInfoManager = class
+  private
+    FCores: TList;
+    FCoreCount: Integer;
+    function GetCore(Index: Integer): TCPUInfo;
+    function DetectCoreCount: Integer;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    property Cores[Index: Integer]: TCPUInfo read GetCore;
+    property CoreCount: Integer read FCoreCount;
+  end;
+
 implementation
 
-constructor TCPUInfo.Create;
+{ TCPUInfo }
+
+constructor TCPUInfo.Create(ACoreID: Integer);
 begin
-  inherited;
+  inherited Create;
+  FCoreID := ACoreID;
   FPrevIdleTime := 0;
   FPrevTotalTime := 0;
   FCPUFrequency := 0;
@@ -36,18 +54,20 @@ end;
 function TCPUInfo.GetCPUFrequency: Double;
 var
   ProcessOutput: TStringList;
+  FreqFile: String;
 begin
   ProcessOutput := TStringList.Create;
   try
-    ProcessOutput.LoadFromFile('/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq');
+    FreqFile := Format('/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq', [FCoreID]);
+    ProcessOutput.LoadFromFile(FreqFile);
     if ProcessOutput.Count > 0 then
       FCPUFrequency := StrToFloat(ProcessOutput[0]) / 1000; // KHz to MHz
   except
     FCPUFrequency := 0;
   end;
   ProcessOutput.Free;
-  WriteLn(Format('[CPU] %s - Freq: %f',
-      [FormatDateTime('hh:nn:ss.zzz', Now), FCPUFrequency]));
+  WriteLn(Format('[CPU%d] %s - Freq: %.2f MHz',
+      [FCoreID, FormatDateTime('hh:nn:ss.zzz', Now), FCPUFrequency]));
   Result := FCPUFrequency;
 end;
 
@@ -63,10 +83,10 @@ begin
   Values := TStringList.Create;
   try
     ProcStat.LoadFromFile('/proc/stat');
-    if ProcStat.Count > 0 then
+    if ProcStat.Count > FCoreID + 1 then  // +1 because cpu0 is on line 1
     begin
       Values.Delimiter := ' ';
-      Values.DelimitedText := ProcStat[0];
+      Values.DelimitedText := ProcStat[FCoreID + 1];  // Get specific core stats
       
       User := StrToInt64(Values[1]);
       Nice := StrToInt64(Values[2]);
@@ -80,8 +100,8 @@ begin
       if DiffTotal > 0 then
       begin
         FCPUUsage := 100.0 * (1.0 - DiffIdle / DiffTotal);
-        WriteLn(Format('[CPU] %s - Usage: %.2f%%', 
-               [FormatDateTime('hh:nn:ss.zzz', Now), FCPUUsage]));
+        WriteLn(Format('[CPU%d] %s - Usage: %.2f%%',
+               [FCoreID, FormatDateTime('hh:nn:ss.zzz', Now), FCPUUsage]));
       end;
       
       FPrevIdleTime := Idle;
@@ -91,6 +111,60 @@ begin
   finally
     ProcStat.Free;
     Values.Free;
+  end;
+end;
+
+{ TCPUInfoManager }
+
+constructor TCPUInfoManager.Create;
+var
+  i: Integer;
+begin
+  inherited Create;
+  FCores := TList.Create;
+  FCoreCount := DetectCoreCount;
+  
+  // Create CPU info objects for each core
+  for i := 0 to FCoreCount - 1 do
+    FCores.Add(TCPUInfo.Create(i));
+end;
+
+destructor TCPUInfoManager.Destroy;
+var
+  i: Integer;
+begin
+  for i := 0 to FCores.Count - 1 do
+    TCPUInfo(FCores[i]).Free;
+  FCores.Free;
+  inherited;
+end;
+
+function TCPUInfoManager.GetCore(Index: Integer): TCPUInfo;
+begin
+  if (Index >= 0) and (Index < FCores.Count) then
+    Result := TCPUInfo(FCores[Index])
+  else
+    Result := nil;
+end;
+
+function TCPUInfoManager.DetectCoreCount: Integer;
+var
+  Process: TProcess;
+  Output: TStringList;
+begin
+  Result := 1; // Default to 1 core
+  Process := TProcess.Create(nil);
+  Output := TStringList.Create;
+  try
+    Process.Executable := 'nproc';
+    Process.Options := [poUsePipes, poWaitOnExit];
+    Process.Execute;
+    Output.LoadFromStream(Process.Output);
+    if Output.Count > 0 then
+      Result := StrToIntDef(Output[0], 1);
+  finally
+    Process.Free;
+    Output.Free;
   end;
 end;
 

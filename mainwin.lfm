@@ -1,7 +1,7 @@
 object MainWindow: TMainWindow
-  Left = 593
+  Left = 457
   Height = 594
-  Top = 125
+  Top = 64
   Width = 830
   Caption = 'CPU Monitor'
   ClientHeight = 594
@@ -21,9 +21,8 @@ object MainWindow: TMainWindow
         Marks.LabelBrush.Style = bsClear
         Marks.Style = smsCustom
         Minors = <>
-        Range.Max = 3600
-        Range.Min = 1200
-        Range.UseMax = True
+        Range.Max = 5000
+        Range.Min = 1000
         Range.UseMin = True
         Title.LabelFont.Orientation = 900
         Title.Visible = True
@@ -33,9 +32,8 @@ object MainWindow: TMainWindow
       end    
       item
         Alignment = calBottom
-        Marks.Format = '%0:.0f'
         Marks.LabelBrush.Style = bsClear
-        Marks.Style = smsCustom
+        Marks.Style = smsNone
         Minors = <>
         Title.Caption = 'Time'
         Title.LabelBrush.Style = bsClear
@@ -58,12 +56,17 @@ object MainWindow: TMainWindow
     Title.Text.Strings = (
       'TAChart'
     )
-    object FreqSeries: TLineSeries
+    object MaxFreqSeries: TLineSeries
       AxisIndexY = 0
+      LinePen.Color = clRed
+    end
+    object MinFreqSeries: TLineSeries
+      AxisIndexY = 0
+      LinePen.Color = clBlue
     end
     object UsageSeries: TBarSeries
       AxisIndexY = 2
-      BarBrush.Color = clRed
+      BarBrush.Color = clGreen
     end
   end
   object UpdateTimer: TTimer
@@ -78,8 +81,8 @@ object MainWindow: TMainWindow
     end
   end
   object RightAxisTransformations: TChartAxisTransformations
-    Left = 40
-    Top = 128
+    Left = 80
+    Top = 80
     object RightAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform
     end
   end
