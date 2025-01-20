@@ -1,7 +1,7 @@
 object MainWindow: TMainWindow
-  Left = 457
+  Left = 554
   Height = 594
-  Top = 64
+  Top = 176
   Width = 830
   Caption = 'CPU Monitor'
   ClientHeight = 594
@@ -17,9 +17,7 @@ object MainWindow: TMainWindow
     Width = 578
     AxisList = <    
       item
-        Marks.Format = '%0:.0f'
         Marks.LabelBrush.Style = bsClear
-        Marks.Style = smsCustom
         Minors = <>
         Range.Max = 5000
         Range.Min = 1000
@@ -40,9 +38,7 @@ object MainWindow: TMainWindow
       end    
       item
         Alignment = calRight
-        Marks.Format = '%0:.0f'
         Marks.LabelBrush.Style = bsClear
-        Marks.Style = smsCustom
         Minors = <>
         Range.Max = 100
         Range.UseMax = True
@@ -53,20 +49,31 @@ object MainWindow: TMainWindow
         Title.LabelBrush.Style = bsClear
         Transformations = RightAxisTransformations
       end>
+    Legend.Visible = True
     Title.Text.Strings = (
       'TAChart'
     )
     object MaxFreqSeries: TLineSeries
+      Legend.Format = 'Max Freq'
       AxisIndexY = 0
       LinePen.Color = clRed
+      LinePen.Width = 2
     end
     object MinFreqSeries: TLineSeries
+      Legend.Format = 'Min Freq'
+      ZPosition = 10
       AxisIndexY = 0
       LinePen.Color = clBlue
+      LinePen.Style = psDash
+      LinePen.Width = 2
+      Marks.Format = '%2:s'
+      Marks.OverlapPolicy = opHideNeighbour
+      Marks.Style = smsLegend
     end
     object UsageSeries: TBarSeries
+      Legend.Format = 'Utilization'
       AxisIndexY = 2
-      BarBrush.Color = clGreen
+      BarBrush.Color = clSilver
     end
   end
   object UpdateTimer: TTimer

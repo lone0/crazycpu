@@ -5,8 +5,8 @@ unit mainwin;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  TAGraph, TASeries, TATransformations, ucpuinfo, Math;  // Add Math unit here
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, TAGraph,
+  TASeries, TATransformations, ucpuinfo;  // Add Math unit here
 
 type
   { TMainWindow }
@@ -55,8 +55,7 @@ begin
   
   MaxFreqSeries.SeriesColor := clRed;
   MinFreqSeries.SeriesColor := clBlue;
-  UsageSeries.SeriesColor := clGreen;
-  
+
   // Configure axis ranges
   Chart.AxisList[1].Range.Min := 0;    // Time axis
   Chart.AxisList[1].Range.Max := MinsToShow;
@@ -75,6 +74,8 @@ var
   i: Integer;
   MaxFreq, MinFreq: Double;
   TotalUsage: Double;
+  MaxFreqCore, MinFreqCore: Integer;
+  CurrentFreq: Double;
 begin
   Inc(FTimePoint);
   
@@ -82,17 +83,32 @@ begin
   MaxFreq := 0;
   MinFreq := 999999;
   TotalUsage := 0;
+  MaxFreqCore := 0;
+  MinFreqCore := 0;
   
   // Collect data from all cores
   for i := 0 to FCPUManager.CoreCount - 1 do
   begin
     with FCPUManager.Cores[i] do
     begin
-      MaxFreq := Max(MaxFreq, GetCPUFrequency);
-      MinFreq := Min(MinFreq, GetCPUFrequency);
+      CurrentFreq := GetCPUFrequency;
+      if CurrentFreq > MaxFreq then
+      begin
+        MaxFreq := CurrentFreq;
+        MaxFreqCore := i;
+      end;
+      if CurrentFreq < MinFreq then
+      begin
+        MinFreq := CurrentFreq;
+        MinFreqCore := i;
+      end;
       TotalUsage := TotalUsage + GetCPUUsage;
     end;
   end;
+  
+  // Update legends with core numbers
+  MaxFreqSeries.Legend.Format := Format('Max Freq (CPU%d)', [MaxFreqCore]);
+  MinFreqSeries.Legend.Format := Format('Min Freq (CPU%d)', [MinFreqCore]);
   
   // Plot the data
   MaxFreqSeries.AddXY(FTimePoint, MaxFreq);
@@ -107,7 +123,6 @@ begin
     UsageSeries.Delete(0);
     Chart.AxisList[1].Range.Min := FTimePoint - MinsToShow;
     Chart.AxisList[1].Range.Max := FTimePoint;
-
   end;
 end;
 
