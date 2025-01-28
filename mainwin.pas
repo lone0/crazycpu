@@ -5,8 +5,8 @@ unit mainwin;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, TAGraph,
-  TASeries, TATransformations, ucpuinfo;  // Add Math unit here
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
+  TAGraph, TASeries, TATransformations, ucpuinfo;  // Add Math unit here
 
 type
   { TMainWindow }
@@ -20,6 +20,7 @@ type
 
     MaxFreqSeries: TLineSeries;
     MinFreqSeries: TLineSeries;
+    MainStatusBar: TStatusBar;
     UsageSeries: TBarSeries;
     UpdateTimer: TTimer;
     procedure FormCreate(Sender: TObject);
@@ -60,8 +61,16 @@ begin
   Chart.AxisList[1].Range.Min := 0;    // Time axis
   Chart.AxisList[1].Range.Max := MinsToShow;
 
+  // Configure axis ranges based on CPU capabilities
+  Chart.AxisList[0].Range.Min := FCPUManager.MinMHz;
+  Chart.AxisList[0].Range.Max := FCPUManager.MaxMHz;
+  Chart.AxisList[0].Range.UseMin := True;
+  Chart.AxisList[0].Range.UseMax := True;
+
   UpdateTimer.Interval := 1000;
   UpdateTimer.Enabled := True;
+
+  MainStatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
 end;
 
 procedure TMainWindow.FormDestroy(Sender: TObject);

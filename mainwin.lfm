@@ -1,20 +1,20 @@
 object MainWindow: TMainWindow
-  Left = 554
+  Left = 533
   Height = 594
   Top = 176
-  Width = 830
+  Width = 851
   Caption = 'CPU Monitor'
   ClientHeight = 594
-  ClientWidth = 830
+  ClientWidth = 851
   DesignTimePPI = 105
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   LCLVersion = '3.6.0.0'
   object Chart: TChart
-    Left = 136
-    Height = 380
-    Top = 24
-    Width = 578
+    Left = 0
+    Height = 320
+    Top = 0
+    Width = 847
     AxisList = <    
       item
         Marks.LabelBrush.Style = bsClear
@@ -49,10 +49,12 @@ object MainWindow: TMainWindow
         Title.LabelBrush.Style = bsClear
         Transformations = RightAxisTransformations
       end>
+    Legend.FixedItemWidth = 128
     Legend.Visible = True
     Title.Text.Strings = (
       'TAChart'
     )
+    Anchors = [akTop, akLeft, akRight]
     object MaxFreqSeries: TLineSeries
       Legend.Format = 'Max Freq'
       AxisIndexY = 0
@@ -75,6 +77,14 @@ object MainWindow: TMainWindow
       AxisIndexY = 2
       BarBrush.Color = clSilver
     end
+  end
+  object MainStatusBar: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 571
+    Width = 851
+    BorderWidth = 1
+    Panels = <>
   end
   object UpdateTimer: TTimer
     OnTimer = UpdateTimerTimer
