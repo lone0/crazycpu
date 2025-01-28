@@ -1,7 +1,7 @@
 object MainWindow: TMainWindow
   Left = 533
   Height = 581
-  Top = 176
+  Top = 175
   Width = 874
   Caption = 'CPU Frequency Monitor'
   ClientHeight = 581
@@ -18,10 +18,10 @@ object MainWindow: TMainWindow
     Width = 874
     AxisList = <    
       item
-        Marks.LabelBrush.Style = bsClear
         Minors = <>
         Range.Max = 5000
         Range.Min = 1000
+        Range.UseMax = True
         Range.UseMin = True
         Title.LabelFont.Orientation = 900
         Title.Visible = True
@@ -39,7 +39,6 @@ object MainWindow: TMainWindow
       end    
       item
         Alignment = calRight
-        Marks.LabelBrush.Style = bsClear
         Minors = <>
         Range.Max = 100
         Range.UseMax = True
