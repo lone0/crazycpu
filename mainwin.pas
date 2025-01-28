@@ -6,13 +6,14 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  TAGraph, TASeries, TATransformations, ucpuinfo;  // Add Math unit here
+  StdCtrls, TAGraph, TASeries, TATransformations, ucpuinfo;  // Add Math unit here
 
 type
   { TMainWindow }
 
   TMainWindow = class(TForm)
-    Chart: TChart;
+    OverallChart: TChart;
+    GroupBox1: TGroupBox;
     RightAxisTransformations: TChartAxisTransformations;
     LeftAxisTransformations: TChartAxisTransformations;
     LeftAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform;
@@ -25,6 +26,7 @@ type
     UpdateTimer: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure UpdateTimerTimer(Sender: TObject);
   private
     FCPUManager: TCPUInfoManager;
@@ -58,14 +60,14 @@ begin
   MinFreqSeries.SeriesColor := clBlue;
 
   // Configure axis ranges
-  Chart.AxisList[1].Range.Min := 0;    // Time axis
-  Chart.AxisList[1].Range.Max := MinsToShow;
+  OverallChart.AxisList[1].Range.Min := 0;    // Time axis
+  OverallChart.AxisList[1].Range.Max := MinsToShow;
 
   // Configure axis ranges based on CPU capabilities
-  Chart.AxisList[0].Range.Min := FCPUManager.MinMHz;
-  Chart.AxisList[0].Range.Max := FCPUManager.MaxMHz;
-  Chart.AxisList[0].Range.UseMin := True;
-  Chart.AxisList[0].Range.UseMax := True;
+  OverallChart.AxisList[0].Range.Min := FCPUManager.MinMHz;
+  OverallChart.AxisList[0].Range.Max := FCPUManager.MaxMHz;
+  OverallChart.AxisList[0].Range.UseMin := True;
+  OverallChart.AxisList[0].Range.UseMax := True;
 
   UpdateTimer.Interval := 1000;
   UpdateTimer.Enabled := True;
@@ -76,6 +78,11 @@ end;
 procedure TMainWindow.FormDestroy(Sender: TObject);
 begin
   FCPUManager.Free;
+end;
+
+procedure TMainWindow.FormResize(Sender: TObject);
+begin
+  OverallChart.Height := MainWindow.ClientHeight div 2;
 end;
 
 procedure TMainWindow.UpdateTimerTimer(Sender: TObject);
@@ -130,8 +137,8 @@ begin
     MaxFreqSeries.Delete(0);
     MinFreqSeries.Delete(0);
     UsageSeries.Delete(0);
-    Chart.AxisList[1].Range.Min := FTimePoint - MinsToShow;
-    Chart.AxisList[1].Range.Max := FTimePoint;
+    OverallChart.AxisList[1].Range.Min := FTimePoint - MinsToShow;
+    OverallChart.AxisList[1].Range.Max := FTimePoint;
   end;
 end;
 

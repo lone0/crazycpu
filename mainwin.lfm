@@ -1,20 +1,21 @@
 object MainWindow: TMainWindow
   Left = 533
-  Height = 594
+  Height = 581
   Top = 176
-  Width = 851
-  Caption = 'CPU Monitor'
-  ClientHeight = 594
-  ClientWidth = 851
+  Width = 874
+  Caption = 'CPU Frequency Monitor'
+  ClientHeight = 581
+  ClientWidth = 874
   DesignTimePPI = 105
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnResize = FormResize
   LCLVersion = '3.6.0.0'
-  object Chart: TChart
+  object OverallChart: TChart
     Left = 0
-    Height = 320
+    Height = 352
     Top = 0
-    Width = 847
+    Width = 874
     AxisList = <    
       item
         Marks.LabelBrush.Style = bsClear
@@ -49,12 +50,14 @@ object MainWindow: TMainWindow
         Title.LabelBrush.Style = bsClear
         Transformations = RightAxisTransformations
       end>
+    Legend.Alignment = laTopLeft
     Legend.FixedItemWidth = 128
+    Legend.UseSidebar = False
     Legend.Visible = True
     Title.Text.Strings = (
       'TAChart'
     )
-    Anchors = [akTop, akLeft, akRight]
+    Align = alTop
     object MaxFreqSeries: TLineSeries
       Legend.Format = 'Max Freq'
       AxisIndexY = 0
@@ -73,7 +76,7 @@ object MainWindow: TMainWindow
       Marks.Style = smsLegend
     end
     object UsageSeries: TBarSeries
-      Legend.Format = 'Utilization'
+      Legend.Format = 'Overall Usage'
       AxisIndexY = 2
       BarBrush.Color = clSilver
     end
@@ -81,10 +84,19 @@ object MainWindow: TMainWindow
   object MainStatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 571
-    Width = 851
+    Top = 558
+    Width = 874
     BorderWidth = 1
     Panels = <>
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Height = 206
+    Top = 352
+    Width = 874
+    Align = alClient
+    Caption = 'GroupBox1'
+    TabOrder = 2
   end
   object UpdateTimer: TTimer
     OnTimer = UpdateTimerTimer

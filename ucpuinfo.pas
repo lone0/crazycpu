@@ -19,6 +19,11 @@ type
     FPrevTotalTime: Int64;
     FCPUFrequency: Double;
     FCPUUsage: Double;
+    FLastFreqUpdate: TDateTime;
+    FLastUsageUpdate: TDateTime;
+    const
+      CACHE_TIMEOUT = 999; // milliseconds
+    function NeedUpdate(LastUpdate: TDateTime): Boolean;
   public
     constructor Create(ACPUNumber, ACoreNumber, ASocketNumber: Integer);
     function GetCPUFrequency: Double;
@@ -62,6 +67,13 @@ begin
   FPrevTotalTime := 0;
   FCPUFrequency := 0;
   FCPUUsage := 0;
+  FLastFreqUpdate := 0;
+  FLastUsageUpdate := 0;
+end;
+
+function TCPUInfo.NeedUpdate(LastUpdate: TDateTime): Boolean;
+begin
+  Result := MilliSecondsBetween(Now, LastUpdate) > CACHE_TIMEOUT;
 end;
 
 function TCPUInfo.GetCPUFrequency: Double;
@@ -69,6 +81,12 @@ var
   ProcessOutput: TStringList;
   FreqFile: String;
 begin
+  if not NeedUpdate(FLastFreqUpdate) then
+  begin
+    Result := FCPUFrequency;
+    Exit;
+  end;
+
   ProcessOutput := TStringList.Create;
   try
     FreqFile := Format('/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq', [FCPUNumber]);
@@ -79,6 +97,7 @@ begin
     FCPUFrequency := 0;
   end;
   ProcessOutput.Free;
+  FLastFreqUpdate := Now;
   WriteLn(Format('[CPU%d] %s - Freq: %.2f MHz',
       [FCPUNumber, FormatDateTime('hh:nn:ss.zzz', Now), FCPUFrequency]));
   Result := FCPUFrequency;
@@ -91,6 +110,12 @@ var
   User, Nice, System, Idle: Int64;
   Total, DiffIdle, DiffTotal: Int64;
 begin
+  if not NeedUpdate(FLastUsageUpdate) then
+  begin
+    Result := FCPUUsage;
+    Exit;
+  end;
+
   Result := 0;
   ProcStat := TStringList.Create;
   Values := TStringList.Create;
@@ -125,6 +150,8 @@ begin
     ProcStat.Free;
     Values.Free;
   end;
+  FLastUsageUpdate := Now;
+  Result := FCPUUsage;
 end;
 
 { TCPUInfoManager }
