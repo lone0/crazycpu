@@ -6,14 +6,15 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
-  StdCtrls, TAGraph, TASeries, TATransformations, TAChartAxisUtils, ucpuinfo;  // Add Math unit here
+  StdCtrls, TAGraph, TASeries, TATransformations, TAChartAxisUtils, TADrawUtils,
+  ucpuinfo;  // Add Math unit here
 
 type
   { TMainWindow }
 
   TCoreChart = record
     Chart: TChart;
-    FreqSeries: TLineSeries;
+    FreqSeries: TAreaSeries;
     UsageSeries: TBarSeries;
   end;
 
@@ -195,6 +196,7 @@ begin
       Top := row * (CHART_HEIGHT + CHART_MARGIN);
       Width := CHART_WIDTH;
       Height := CHART_HEIGHT;
+      AntialiasingMode := amOn;
     end;
     
     // Configure chart
@@ -205,13 +207,16 @@ begin
     begin
       Chart := NewChart;
       
-      FreqSeries := TLineSeries.Create(Chart);
+      FreqSeries := TAreaSeries.Create(Chart);
       with FreqSeries do
       begin
         Chart.AddSeries(FreqSeries);
         AxisIndexY := 0;
-        SeriesColor := clBlue;
+        AreaContourPen.Color := $e19455;
         Title := 'Frequency';
+        AreaBrush.Color := $00EDBE96;
+        AreaLinesPen.Style := psClear;
+        Transparency := 200;
       end;
       
       UsageSeries := TBarSeries.Create(Chart);
@@ -221,6 +226,7 @@ begin
         AxisIndexY := 2;
         SeriesColor := clSilver;
         Title := 'Usage';
+        ZPosition := 2;
       end;
     end;
   end;
@@ -255,11 +261,15 @@ begin
       Range.UseMin := True;
       Range.UseMax := True;
       Transformations := LeftTrans;
+      Marks.Visible := False;
     end;
     
     // Bottom axis (Time)
-    //AxisList.Add.Alignment := calBottom;
-    AxisList[1].Title.Caption := 'Time';
+    with AxisList[1] do
+    begin
+      Title.Caption := 'Time';
+      Marks.Visible := False;
+    end;
     
     // Right axis (Usage)
     AxisList.Add.Alignment := calRight;
@@ -272,7 +282,13 @@ begin
       Range.UseMin := True;
       Range.UseMax := True;
       Transformations := RightTrans;
+      Marks.Visible := False;
     end;
+
+    Foot.Text.Add(ATitle);
+    Foot.Text.Add('0 %');
+    Foot.Alignment := taLeftJustify;
+    Foot.Visible := true; 
   end;
 end;
 
@@ -282,6 +298,8 @@ begin
   begin
     FreqSeries.AddXY(FTimePoint, ACPUInfo.GetCPUFrequency);
     UsageSeries.AddXY(FTimePoint, ACPUInfo.GetCPUUsage);
+    Chart.Foot.Text[0] := Format('CPU %d: %.2f GHz', [ACPUInfo.CPUNumber, ACPUInfo.GetCPUFrequency/1000]);
+    Chart.Foot.Text[1] := Format('%.1f %%', [ACPUInfo.CPUUsage]);
     
     if FTimePoint > MinsToShow then
     begin

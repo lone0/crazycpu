@@ -224,7 +224,7 @@ begin
         Key := Format('%d:%d', [Socket, Core]);
         
         // Only process unique combinations
-        if (UniqueKeys.IndexOf(Key) = -1) and (CPU >= 0) and (Core >= 0) and (Socket >= 0) then
+        if {( UniqueKeys.IndexOf(Key) = -1) and} (CPU >= 0) and (Core >= 0) and (Socket >= 0) then
         begin
           UniqueKeys.Add(Key);
           WriteLn(Format('Found unique core: CPU=%d, Core=%d, Socket=%d', [CPU, Core, Socket]));
