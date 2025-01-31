@@ -7,13 +7,13 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
   StdCtrls, TAGraph, TASeries, TATransformations, TAChartAxisUtils, TADrawUtils,
-  ucpuinfo, Math;  // Add Math unit here
+  TATools, ucpuinfo, Math, ustickerchart;  // Add Math unit here
 
 type
   { TMainWindow }
 
   TCoreChart = record
-    Chart: TChart;
+    Chart: TStickerChart;  // Changed from TChart
     FreqSeries: TAreaSeries;
     UsageSeries: TBarSeries;
   end;
@@ -29,7 +29,7 @@ type
 
     MaxFreqSeries: TLineSeries;
     MinFreqSeries: TLineSeries;
-    MainStatusBar: TStatusBar;
+    StatusBar: TStatusBar;
     UsageSeries: TBarSeries;
     UpdateTimer: TTimer;
     procedure FormCreate(Sender: TObject);
@@ -89,7 +89,7 @@ begin
   UpdateTimer.Interval := 1000;
   UpdateTimer.Enabled := True;
 
-  MainStatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
+  StatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
   
   CreateCoreCharts;
 end;
@@ -173,13 +173,13 @@ end;
 procedure TMainWindow.CreateCoreCharts;
 var
   i: Integer;
-  NewChart: TChart;
+  NewChart: TStickerChart;  // Changed from TChart
 begin
   SetLength(FCoreCharts, FCPUManager.CoreCount);
   
   for i := 0 to FCPUManager.CoreCount - 1 do
   begin
-    NewChart := TChart.Create(CoreScroll);
+    NewChart := TStickerChart.Create(CoreScroll);  // Changed from TChart
     with NewChart do
     begin
       Parent := CoreScroll;
