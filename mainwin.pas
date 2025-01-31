@@ -69,6 +69,7 @@ implementation
 procedure TMainWindow.FormCreate(Sender: TObject);
 begin
   FCPUManager := TCPUInfoManager.Create;
+  Caption := 'CPU - ' + FCPUManager.Model;
   FTimePoint := 0;
   
   // Configure series
