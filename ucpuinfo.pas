@@ -41,9 +41,11 @@ type
     FCoreCount: Integer;
     FMaxMHz: Double;
     FMinMHz: Double;
+    FModel: String;
     function GetCore(Index: Integer): TCPUInfo;
     function ParseCPUInfo: Integer;
     procedure ParseCPUFreqRange;
+    procedure ParseCPUModel;
   public
     constructor Create;
     destructor Destroy; override;
@@ -51,6 +53,7 @@ type
     property CoreCount: Integer read FCoreCount;
     property MaxMHz: Double read FMaxMHz;
     property MinMHz: Double read FMinMHz;
+    property Model: String read FModel;
   end;
 
 implementation
@@ -159,6 +162,7 @@ end;
 constructor TCPUInfoManager.Create;
 begin
   inherited Create;
+  ParseCPUModel;
   FCores := TList.Create;
   ParseCPUFreqRange;
   FCoreCount := ParseCPUInfo;
@@ -273,6 +277,30 @@ begin
   finally
     Process.Free;
     Output.Free;
+  end;
+end;
+
+procedure TCPUInfoManager.ParseCPUModel;
+var
+  CpuInfo: TStringList;
+  i: Integer;
+  Line: String;
+begin
+  FModel := 'Unknown CPU';
+  CpuInfo := TStringList.Create;
+  try
+    CpuInfo.LoadFromFile('/proc/cpuinfo');
+    for i := 0 to CpuInfo.Count - 1 do
+    begin
+      Line := CpuInfo[i];
+      if Pos('model name', Line) > 0 then
+      begin
+        FModel := Trim(Copy(Line, Pos(':', Line) + 1, Length(Line)));
+        Break;
+      end;
+    end;
+  finally
+    CpuInfo.Free;
   end;
 end;
 
