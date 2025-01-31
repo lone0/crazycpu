@@ -16,8 +16,11 @@ object MainWindow: TMainWindow
     Height = 352
     Top = 0
     Width = 874
+    AllowPanning = False
+    AllowZoom = False
     AxisList = <    
       item
+        Marks.LabelBrush.Style = bsClear
         Minors = <>
         Range.Max = 5000
         Range.Min = 1000
@@ -39,13 +42,14 @@ object MainWindow: TMainWindow
       end    
       item
         Alignment = calRight
+        Marks.LabelBrush.Style = bsClear
         Minors = <>
         Range.Max = 100
         Range.UseMax = True
         Range.UseMin = True
         Title.LabelFont.Orientation = 900
         Title.Visible = True
-        Title.Caption = 'CPU Usage (%)'
+        Title.Caption = 'Overall CPU Usage (%)'
         Title.LabelBrush.Style = bsClear
         Transformations = RightAxisTransformations
       end>
@@ -80,7 +84,7 @@ object MainWindow: TMainWindow
       BarBrush.Color = clSilver
     end
   end
-  object MainStatusBar: TStatusBar
+  object StatusBar: TStatusBar
     Left = 0
     Height = 23
     Top = 558
