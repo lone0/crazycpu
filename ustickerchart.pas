@@ -26,7 +26,7 @@ begin
   begin
     ScrollBox := TScrollBox(Parent);
     with ScrollBox.VertScrollBar do
-      Position := Position - WheelDelta div abs(WheelDelta) * Increment;
+      Position := Position - WheelDelta div abs(WheelDelta) * Page div 6;
     Result := True;
   end;
 end;

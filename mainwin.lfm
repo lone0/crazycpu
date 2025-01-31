@@ -84,6 +84,18 @@ object MainWindow: TMainWindow
       BarBrush.Color = clSilver
     end
   end
+  object Splitter1: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 5
+    Top = 352
+    Width = 874
+    Align = alTop
+    Beveled = True
+    ResizeAnchor = akTop
+    ResizeStyle = rsPattern
+    OnMoved = Splitter1Moved
+  end
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
@@ -94,8 +106,8 @@ object MainWindow: TMainWindow
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Height = 206
-    Top = 352
+    Height = 201
+    Top = 357
     Width = 874
     Align = alClient
     Caption = 'GroupBox1'

@@ -29,6 +29,7 @@ type
 
     MaxFreqSeries: TLineSeries;
     MinFreqSeries: TLineSeries;
+    Splitter1: TSplitter;
     StatusBar: TStatusBar;
     UsageSeries: TBarSeries;
     UpdateTimer: TTimer;
@@ -36,10 +37,12 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure UpdateTimerTimer(Sender: TObject);
+    procedure Splitter1Moved(Sender: TObject);
   private
     FCPUManager: TCPUInfoManager;
     FTimePoint: Integer;
     FCoreCharts: array of TCoreChart;
+    FSplitRatio: Double;
     const
       MinsToShow = 60;
       CHARTS_PER_ROW = 2;
@@ -91,6 +94,8 @@ begin
 
   StatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
   
+  FSplitRatio := 0.5; // default 50/50 split
+
   CreateCoreCharts;
 end;
 
@@ -101,9 +106,11 @@ begin
 end;
 
 procedure TMainWindow.FormResize(Sender: TObject);
+var
+  NewHeight: Integer;
 begin
-  // Adjust overall chart height
-  OverallChart.Height := MainWindow.ClientHeight div 2;
+  NewHeight := Round(FSplitRatio * (ClientHeight - StatusBar.Height));
+  OverallChart.Height := NewHeight;
   
   // Rearrange core charts
   ArrangeCoreCharts;
@@ -335,6 +342,11 @@ begin
       Height := CHART_HEIGHT;
     end;
   end;
+end;
+
+procedure TMainWindow.Splitter1Moved(Sender: TObject);
+begin
+  FSplitRatio := OverallChart.Height / (ClientHeight - StatusBar.Height);
 end;
 
 end.
