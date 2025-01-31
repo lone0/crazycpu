@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls, ComCtrls,
   StdCtrls, TAGraph, TASeries, TATransformations, TAChartAxisUtils, TADrawUtils,
-  ucpuinfo;  // Add Math unit here
+  ucpuinfo, Math;  // Add Math unit here
 
 type
   { TMainWindow }
@@ -21,6 +21,7 @@ type
   TMainWindow = class(TForm)
     OverallChart: TChart;
     GroupBox1: TGroupBox;
+    CoreScroll: TScrollBox;
     RightAxisTransformations: TChartAxisTransformations;
     LeftAxisTransformations: TChartAxisTransformations;
     LeftAxisTransformationsAutoScaleAxisTransform1: TAutoScaleAxisTransform;
@@ -42,12 +43,13 @@ type
     const
       MinsToShow = 60;
       CHARTS_PER_ROW = 2;
-      CHART_WIDTH = 400;
-      CHART_HEIGHT = 200;
-      CHART_MARGIN = 10;
+      CHART_WIDTH = 160;
+      CHART_HEIGHT = 120;
+      CHART_MARGIN = 2;
     procedure CreateCoreCharts;
     procedure ConfigureChart(AChart: TChart; ATitle: string);
     procedure UpdateCoreChart(ACoreChart: TCoreChart; ACPUInfo: TCPUInfo);
+    procedure ArrangeCoreCharts;
   public
 
   end;
@@ -88,18 +90,23 @@ begin
   UpdateTimer.Enabled := True;
 
   MainStatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
-
+  
   CreateCoreCharts;
 end;
 
 procedure TMainWindow.FormDestroy(Sender: TObject);
 begin
   FCPUManager.Free;
+  // ScrollBox will be freed automatically as it's owned by GroupBox1
 end;
 
 procedure TMainWindow.FormResize(Sender: TObject);
 begin
+  // Adjust overall chart height
   OverallChart.Height := MainWindow.ClientHeight div 2;
+  
+  // Rearrange core charts
+  ArrangeCoreCharts;
 end;
 
 procedure TMainWindow.UpdateTimerTimer(Sender: TObject);
@@ -165,35 +172,17 @@ end;
 
 procedure TMainWindow.CreateCoreCharts;
 var
-  i, row, col: Integer;
+  i: Integer;
   NewChart: TChart;
-  ScrollBox: TScrollBox;
-  TotalHeight: Integer;
 begin
   SetLength(FCoreCharts, FCPUManager.CoreCount);
   
-  // Create scrollbox in groupbox
-  ScrollBox := TScrollBox.Create(GroupBox1);
-  ScrollBox.Parent := GroupBox1;
-  ScrollBox.Align := alClient;
-  ScrollBox.HorzScrollBar.Visible := False;
-  
-  // Calculate total height needed
-  TotalHeight := ((FCPUManager.CoreCount + CHARTS_PER_ROW - 1) div CHARTS_PER_ROW) 
-                 * (CHART_HEIGHT + CHART_MARGIN);
-  
   for i := 0 to FCPUManager.CoreCount - 1 do
   begin
-    row := i div CHARTS_PER_ROW;
-    col := i mod CHARTS_PER_ROW;
-    
-    // Create chart
-    NewChart := TChart.Create(ScrollBox);
+    NewChart := TChart.Create(CoreScroll);
     with NewChart do
     begin
-      Parent := ScrollBox;
-      Left := col * (CHART_WIDTH + CHART_MARGIN);
-      Top := row * (CHART_HEIGHT + CHART_MARGIN);
+      Parent := CoreScroll;
       Width := CHART_WIDTH;
       Height := CHART_HEIGHT;
       AntialiasingMode := amOn;
@@ -230,6 +219,9 @@ begin
       end;
     end;
   end;
+
+  // Do initial arrangement
+  ArrangeCoreCharts;
 end;
 
 procedure TMainWindow.ConfigureChart(AChart: TChart; ATitle: string);
@@ -239,9 +231,7 @@ begin
   with AChart do
   begin
     Title.Text.Text := ATitle;
-    Hint := ATitle;
-    ShowHint := true;
-    
+
     // Create transformations
     LeftTrans := TChartAxisTransformations.Create(self);
     RightTrans := TChartAxisTransformations.Create(self);
@@ -307,6 +297,42 @@ begin
       UsageSeries.Delete(0);
       Chart.AxisList[1].Range.Min := FTimePoint - MinsToShow;
       Chart.AxisList[1].Range.Max := FTimePoint;
+    end;
+  end;
+end;
+
+procedure TMainWindow.ArrangeCoreCharts;
+var
+  i, row, col: Integer;
+  AvailWidth: Integer;
+  NewChartsPerRow: Integer;
+  NewChartWidth: Integer;
+  TotalRows: Integer;
+begin
+  if Length(FCoreCharts) = 0 then Exit;
+  
+  // Calculate available width
+  AvailWidth := CoreScroll.ClientWidth;
+  if CoreScroll.VertScrollBar.Visible then
+    Dec(AvailWidth, CoreScroll.VertScrollBar.Size);
+    
+  // Calculate layout parameters
+  NewChartsPerRow := Max(1, (AvailWidth - CHART_MARGIN) div (CHART_WIDTH + CHART_MARGIN));
+  NewChartWidth := (AvailWidth - (NewChartsPerRow + 1) * CHART_MARGIN) div NewChartsPerRow;
+  TotalRows := (Length(FCoreCharts) + NewChartsPerRow - 1) div NewChartsPerRow;
+  
+  // Arrange charts
+  for i := 0 to High(FCoreCharts) do
+  begin
+    row := i div NewChartsPerRow;
+    col := i mod NewChartsPerRow;
+    
+    with FCoreCharts[i].Chart do
+    begin
+      Left := CHART_MARGIN + col * (NewChartWidth + CHART_MARGIN);
+      Top := CHART_MARGIN + row * (CHART_HEIGHT + CHART_MARGIN);
+      Width := NewChartWidth;
+      Height := CHART_HEIGHT;
     end;
   end;
 end;

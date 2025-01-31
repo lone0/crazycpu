@@ -96,6 +96,10 @@ object MainWindow: TMainWindow
     Align = alClient
     Caption = 'GroupBox1'
     TabOrder = 2
+    object CoreScroll: TScrollBox
+      Align = alClient
+      HorzScrollBar.Visible = False
+    end
   end
   object UpdateTimer: TTimer
     OnTimer = UpdateTimerTimer
