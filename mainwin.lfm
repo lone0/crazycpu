@@ -92,9 +92,9 @@ object MainWindow: TMainWindow
     Width = 874
     Align = alTop
     Beveled = True
+    OnMoved = Splitter1Moved
     ResizeAnchor = akTop
     ResizeStyle = rsPattern
-    OnMoved = Splitter1Moved
   end
   object StatusBar: TStatusBar
     Left = 0
@@ -110,11 +110,16 @@ object MainWindow: TMainWindow
     Top = 357
     Width = 874
     Align = alClient
-    Caption = 'GroupBox1'
+    Caption = 'Cores/Threads'
+    ClientHeight = 175
+    ClientWidth = 868
     TabOrder = 2
     object CoreScroll: TScrollBox
       Align = alClient
       HorzScrollBar.Visible = False
+      VertScrollBar.Page = 1
+      Align = alClient
+      TabOrder = 0
     end
   end
   object UpdateTimer: TTimer

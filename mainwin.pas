@@ -93,7 +93,8 @@ begin
   UpdateTimer.Interval := 1000;
   UpdateTimer.Enabled := True;
 
-  StatusBar.SimpleText := Format('Total Core: %d', [FCPUManager.CoreCount]);
+  StatusBar.SimpleText := Format('%d cores %d threads, maximum frequency %.0fMHz, minimum frequency %.0fMHz',
+     [FCPUManager.PhyCoreCount, FCPUManager.CoreCount, FCPUManager.MaxMHz, FCPUManager.MinMHz]);
   
   FSplitRatio := 0.5; // default 50/50 split
 

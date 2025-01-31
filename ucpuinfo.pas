@@ -8,8 +8,6 @@ uses
   Classes, SysUtils, Process, DateUtils;
 
 type
-  TCoreType = (ctPhysical, ctLogical);
-
   TCPUInfo = class
   private
     FCPUNumber: Integer;    // CPU logical number (0-N)
@@ -38,7 +36,8 @@ type
   TCPUInfoManager = class
   private
     FCores: TList;
-    FCoreCount: Integer;
+    FCoreCount: Integer;    // Total logical cores
+    FPhyCoreCount: Integer; // Physical cores only
     FMaxMHz: Double;
     FMinMHz: Double;
     FModel: String;
@@ -51,6 +50,7 @@ type
     destructor Destroy; override;
     property Cores[Index: Integer]: TCPUInfo read GetCore;
     property CoreCount: Integer read FCoreCount;
+    property PhyCoreCount: Integer read FPhyCoreCount;
     property MaxMHz: Double read FMaxMHz;
     property MinMHz: Double read FMinMHz;
     property Model: String read FModel;
@@ -198,6 +198,7 @@ var
   NewCPUInfo: TCPUInfo;
 begin
   Result := 0;
+  FPhyCoreCount := 0;
   Process := TProcess.Create(nil);
   Output := TStringList.Create;
   UniqueKeys := TStringList.Create;
@@ -228,9 +229,14 @@ begin
         Key := Format('%d:%d', [Socket, Core]);
         
         // Only process unique combinations
-        if {( UniqueKeys.IndexOf(Key) = -1) and} (CPU >= 0) and (Core >= 0) and (Socket >= 0) then
+        if (CPU >= 0) and (Core >= 0) and (Socket >= 0) then
         begin
-          UniqueKeys.Add(Key);
+          if UniqueKeys.IndexOf(Key) = -1 then
+          begin
+            Inc(FPhyCoreCount);
+            UniqueKeys.Add(Key);
+          end;
+          
           WriteLn(Format('Found unique core: CPU=%d, Core=%d, Socket=%d', [CPU, Core, Socket]));
           
           NewCPUInfo := TCPUInfo.Create(CPU, Core, Socket);
@@ -240,6 +246,7 @@ begin
       end;
     end;
     
+    FCoreCount := Result;
     WriteLn(Format('Total unique cores found: %d', [Result]));
     
   finally
