@@ -45,7 +45,6 @@ type
     FSplitRatio: Double;
     const
       MinsToShow = 60;
-      CHARTS_PER_ROW = 2;
       CHART_WIDTH = 160;
       CHART_HEIGHT = 120;
       CHART_MARGIN = 2;
@@ -96,7 +95,7 @@ begin
   StatusBar.SimpleText := Format('%d cores %d threads, maximum frequency %.0fMHz, minimum frequency %.0fMHz',
      [FCPUManager.PhyCoreCount, FCPUManager.CoreCount, FCPUManager.MaxMHz, FCPUManager.MinMHz]);
   
-  FSplitRatio := 0.5; // default 50/50 split
+  FSplitRatio := OverallChart.Height / (ClientHeight - StatusBar.Height);
 
   CreateCoreCharts;
 end;
@@ -314,9 +313,8 @@ procedure TMainWindow.ArrangeCoreCharts;
 var
   i, row, col: Integer;
   AvailWidth: Integer;
-  NewChartsPerRow: Integer;
-  NewChartWidth: Integer;
-  TotalRows: Integer;
+  ChartsPerRow: Integer;
+  CalculatedChartWidth: Integer;
 begin
   if Length(FCoreCharts) = 0 then Exit;
   
@@ -326,21 +324,20 @@ begin
     Dec(AvailWidth, CoreScroll.VertScrollBar.Size);
     
   // Calculate layout parameters
-  NewChartsPerRow := Max(1, (AvailWidth - CHART_MARGIN) div (CHART_WIDTH + CHART_MARGIN));
-  NewChartWidth := (AvailWidth - (NewChartsPerRow + 1) * CHART_MARGIN) div NewChartsPerRow;
-  TotalRows := (Length(FCoreCharts) + NewChartsPerRow - 1) div NewChartsPerRow;
+  ChartsPerRow := Max(1, (AvailWidth - CHART_MARGIN) div (CHART_WIDTH + CHART_MARGIN));
+  CalculatedChartWidth := (AvailWidth - (ChartsPerRow + 1) * CHART_MARGIN) div ChartsPerRow;
   
   // Arrange charts
   for i := 0 to High(FCoreCharts) do
   begin
-    row := i div NewChartsPerRow;
-    col := i mod NewChartsPerRow;
+    row := i div ChartsPerRow;
+    col := i mod ChartsPerRow;
     
     with FCoreCharts[i].Chart do
     begin
-      Left := CHART_MARGIN + col * (NewChartWidth + CHART_MARGIN);
+      Left := CHART_MARGIN + col * (CalculatedChartWidth + CHART_MARGIN);
       Top := CHART_MARGIN + row * (CHART_HEIGHT + CHART_MARGIN);
-      Width := NewChartWidth;
+      Width := CalculatedChartWidth;
       Height := CHART_HEIGHT;
     end;
   end;

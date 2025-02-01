@@ -13,7 +13,7 @@ object MainWindow: TMainWindow
   LCLVersion = '3.6.0.0'
   object OverallChart: TChart
     Left = 0
-    Height = 352
+    Height = 120
     Top = 0
     Width = 874
     AllowPanning = False
@@ -88,7 +88,7 @@ object MainWindow: TMainWindow
     Cursor = crVSplit
     Left = 0
     Height = 5
-    Top = 352
+    Top = 120
     Width = 874
     Align = alTop
     Beveled = True
@@ -106,12 +106,12 @@ object MainWindow: TMainWindow
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Height = 201
-    Top = 357
+    Height = 433
+    Top = 125
     Width = 874
     Align = alClient
-    Caption = 'Cores/Threads'
-    ClientHeight = 175
+    Caption = '↑Overall   ↓Individual cores/threads:'
+    ClientHeight = 407
     ClientWidth = 868
     TabOrder = 2
     object CoreScroll: TScrollBox
