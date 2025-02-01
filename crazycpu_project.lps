@@ -2,18 +2,89 @@
 <CONFIG>
   <ProjectSession>
     <Version Value="12"/>
-    <BuildModes Active="Default">
+    <BuildModes Active="Release">
+      <Item Name="Debug">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="crazycpu-debug.elf"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <Parsing>
+            <SyntaxOptions>
+              <IncludeAssertionCode Value="True"/>
+            </SyntaxOptions>
+          </Parsing>
+          <CodeGeneration>
+            <Checks>
+              <IOChecks Value="True"/>
+              <RangeChecks Value="True"/>
+              <OverflowChecks Value="True"/>
+              <StackChecks Value="True"/>
+            </Checks>
+            <VerifyObjMethodCallValidity Value="True"/>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
+              <UseHeaptrc Value="True"/>
+              <TrashVariables Value="True"/>
+              <UseExternalDbgSyms Value="True"/>
+            </Debugging>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item>
+      <Item Name="Release">
+        <CompilerOptions>
+          <Version Value="11"/>
+          <Target>
+            <Filename Value="crazycpu.elf"/>
+          </Target>
+          <SearchPaths>
+            <IncludeFiles Value="$(ProjOutDir)"/>
+            <UnitOutputDirectory Value="lib/$(TargetCPU)-$(TargetOS)"/>
+          </SearchPaths>
+          <CodeGeneration>
+            <SmartLinkUnit Value="True"/>
+            <Optimizations>
+              <OptimizationLevel Value="3"/>
+            </Optimizations>
+          </CodeGeneration>
+          <Linking>
+            <Debugging>
+              <GenerateDebugInfo Value="False"/>
+              <RunWithoutDebug Value="True"/>
+            </Debugging>
+            <LinkSmart Value="True"/>
+            <Options>
+              <Win32>
+                <GraphicApplication Value="True"/>
+              </Win32>
+            </Options>
+          </Linking>
+        </CompilerOptions>
+      </Item>
       <SessionMatrixOptions Count="1">
         <Item1 ID="652667310363" Modes="Default" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt6"/>
       </SessionMatrixOptions>
     </BuildModes>
+    <ManyBuildModesSelection Value="Debug,Release"/>
     <Units>
       <Unit>
         <Filename Value="crazycpu_project.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
+        <EditorIndex Value="3"/>
         <CursorPos Y="23"/>
         <UsageCount Value="255"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="mainwin.pas"/>
@@ -21,9 +92,9 @@
         <ComponentName Value="MainWindow"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="115"/>
-        <CursorPos X="15" Y="133"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="305"/>
+        <CursorPos X="3" Y="318"/>
         <UsageCount Value="255"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -31,8 +102,8 @@
       <Unit>
         <Filename Value="ucpuinfo.pas"/>
         <IsPartOfProject Value="True"/>
-        <TopLine Value="23"/>
-        <CursorPos X="23" Y="25"/>
+        <TopLine Value="22"/>
+        <CursorPos X="9" Y="25"/>
         <UsageCount Value="207"/>
         <Loaded Value="True"/>
       </Unit>
@@ -41,7 +112,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="30"/>
         <CursorPos Y="44"/>
-        <UsageCount Value="66"/>
+        <UsageCount Value="63"/>
       </Unit>
       <Unit>
         <Filename Value="/usr/share/lazarus/3.6.0/components/tachart/tacustomseries.pas"/>
@@ -49,145 +120,146 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="197"/>
         <CursorPos X="14" Y="210"/>
-        <UsageCount Value="64"/>
+        <UsageCount Value="61"/>
       </Unit>
       <Unit>
         <Filename Value="mainwin.lfm"/>
         <EditorIndex Value="-1"/>
-        <CursorPos X="15" Y="12"/>
-        <UsageCount Value="41"/>
+        <TopLine Value="53"/>
+        <CursorPos X="35" Y="76"/>
+        <UsageCount Value="3"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
         <Filename Value="ustickerchart.pas"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
-        <TopLine Value="9"/>
-        <CursorPos X="72" Y="29"/>
-        <UsageCount Value="11"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="7"/>
+        <CursorPos X="4" Y="21"/>
+        <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1543" Column="26" TopLine="1533"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1544" Column="26" TopLine="1533"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1545" Column="56" TopLine="1533"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1546" Column="26" TopLine="1533"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1547" Column="26" TopLine="1533"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1559" Column="31" TopLine="1541"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1560" Column="69" TopLine="1541"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1602" Column="83" TopLine="1581"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1603" Column="97" TopLine="1582"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1604" Column="93" TopLine="1583"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1605" Column="91" TopLine="1584"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1606" Column="97" TopLine="1585"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1607" Column="99" TopLine="1586"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1784" Column="74" TopLine="1763"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/controls.pp"/>
-        <Caret Line="1786" Column="77" TopLine="1765"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="22" Column="21" TopLine="7"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/forms.pp"/>
-        <Caret Line="219" Column="3" TopLine="211"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="29" Column="27" TopLine="8"/>
+        <Filename Value="ucpuinfo.pas"/>
+        <Caret Line="182" TopLine="171"/>
       </Position>
       <Position>
         <Filename Value="mainwin.pas"/>
-        <Caret Line="22" Column="48" TopLine="2"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="72" Column="12" TopLine="58"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="71" Column="12" TopLine="57"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="70" Column="12" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="72" Column="12" TopLine="58"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="85" Column="54" TopLine="82"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="91" Column="49" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="89" TopLine="84"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="96" Column="49" TopLine="75"/>
+      </Position>
+      <Position>
+        <Filename Value="ucpuinfo.pas"/>
+        <Caret Line="25" Column="23" TopLine="22"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="263" Column="7" TopLine="250"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="270" Column="7" TopLine="257"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="274" Column="17" TopLine="261"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="284" Column="7" TopLine="271"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="319" Column="3" TopLine="315"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="98" Column="74" TopLine="82"/>
+      </Position>
+      <Position>
+        <Filename Value="mainwin.pas"/>
+        <Caret Line="318" Column="3" TopLine="305"/>
       </Position>
       <Position>
         <Filename Value="ustickerchart.pas"/>
-        <Caret Line="30" Column="68" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="26" Column="3" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="25" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="30" Column="27" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="22" Column="3" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/forms.pp"/>
-        <Caret Line="219" Column="3" TopLine="216"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="31" Column="69" TopLine="8"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="30" Column="9" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="29" Column="42" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="ustickerchart.pas"/>
-        <Caret Line="28" Column="33" TopLine="9"/>
-      </Position>
-      <Position>
-        <Filename Value="/usr/share/lazarus/3.6.0/lcl/forms.pp"/>
-        <Caret Line="213" Column="46" TopLine="200"/>
+        <Caret Line="13" Column="27" TopLine="7"/>
       </Position>
     </JumpHistory>
     <RunParams>

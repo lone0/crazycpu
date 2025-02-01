@@ -55,7 +55,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="crazycpu_project"/>
+      <Filename Value="crazycpu.elf"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
